@@ -2,22 +2,30 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8">
-  <title>Redirection...</title>
-  <script>
-    window.onload = function () {
-      const params = new URLSearchParams(window.location.search);
-      const target = params.get("r");
-
-      if (target) {
-        // Rediriger vers GitHub ou autre
-        window.location.href = `${target}`;
-      } else {
-        document.body.innerHTML = "<h2>Paramètre de redirection manquant !</h2>";
-      }
-    };
-  </script>
+  <title>Redirection en cours...</title>
 </head>
 <body>
   <p>Redirection en cours...</p>
+  <script>
+    // Obtenir l'URL de redirection depuis le paramètre "r"
+    const params = new URLSearchParams(window.location.search);
+    const target = params.get("r");
+
+    if (target) {
+      // Crée un lien invisible et simule un clic
+      const a = document.createElement('a');
+      a.href = target;
+      a.style.display = 'none';
+      document.body.appendChild(a);
+      a.click();
+
+      // Optionnel : rediriger après un petit délai au cas où ça ne fonctionne pas
+      setTimeout(() => {
+        window.location.href = target;
+      }, 100);
+    } else {
+      document.body.innerHTML = "<h2>Aucun lien de redirection trouvé !</h2>";
+    }
+  </script>
 </body>
 </html>
