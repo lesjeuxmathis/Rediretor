@@ -5,248 +5,220 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Redirection en cours...</title>
   <style>
-    * {
+    body {
       margin: 0;
       padding: 0;
-      box-sizing: border-box;
-    }
-    
-    body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      font-family: 'Segoe UI', Arial, sans-serif;
       background-color: #1a1a1a;
+      color: #f0f0f0;
       height: 100vh;
       display: flex;
+      flex-direction: column;
       justify-content: center;
       align-items: center;
-      color: #e0e0e0;
       overflow: hidden;
     }
     
     .container {
       text-align: center;
-      padding: 2.5rem;
-      border-radius: 8px;
-      background-color: #252525;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-      max-width: 90%;
-      width: 450px;
-      position: relative;
-      z-index: 10;
-      border: 1px solid #333;
     }
     
     h1 {
-      margin-bottom: 2rem;
+      font-size: 24px;
       font-weight: 400;
-      font-size: 1.8rem;
+      margin-bottom: 40px;
       color: #e0e0e0;
     }
     
-    /* Loader style Windows */
-    .windows-loader {
-      display: flex;
-      justify-content: center;
-      margin: 2rem 0;
-      padding: 1rem 0;
+    .loader {
+      position: relative;
+      width: 80px;
+      height: 80px;
+      margin: 0 auto;
+    }
+    
+    .loader-dots {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      animation: spin 3s linear infinite;
     }
     
     .dot {
-      width: 8px;
-      height: 8px;
-      margin: 0 6px;
-      background-color: #0078d7;
+      position: absolute;
+      width: 12px;
+      height: 12px;
+      background-color: #f0f0f0;
       border-radius: 50%;
-      animation: windows-dots 1.5s infinite ease-in-out;
+      transform: scale(0);
+      animation: pulse 1.5s ease-in-out infinite;
     }
     
     .dot:nth-child(1) {
+      top: 0;
+      left: calc(50% - 6px);
       animation-delay: 0s;
     }
     
     .dot:nth-child(2) {
+      top: 12px;
+      right: 12px;
       animation-delay: 0.2s;
     }
     
     .dot:nth-child(3) {
+      right: 0;
+      top: calc(50% - 6px);
       animation-delay: 0.4s;
     }
     
     .dot:nth-child(4) {
+      bottom: 12px;
+      right: 12px;
       animation-delay: 0.6s;
     }
     
     .dot:nth-child(5) {
+      bottom: 0;
+      left: calc(50% - 6px);
       animation-delay: 0.8s;
     }
     
-    @keyframes windows-dots {
-      0% {
-        transform: scale(0.6);
-        opacity: 0.6;
+    .dot:nth-child(6) {
+      bottom: 12px;
+      left: 12px;
+      animation-delay: 1.0s;
+    }
+    
+    .dot:nth-child(7) {
+      left: 0;
+      top: calc(50% - 6px);
+      animation-delay: 1.2s;
+    }
+    
+    .dot:nth-child(8) {
+      top: 12px;
+      left: 12px;
+      animation-delay: 1.4s;
+    }
+    
+    @keyframes pulse {
+      0%, 100% {
+        transform: scale(0);
+        opacity: 0.7;
       }
       50% {
         transform: scale(1);
         opacity: 1;
       }
+    }
+    
+    @keyframes spin {
+      0% {
+        transform: rotate(0deg);
+      }
       100% {
-        transform: scale(0.6);
-        opacity: 0.6;
+        transform: rotate(360deg);
       }
     }
     
-    p {
-      margin: 1rem 0;
-      font-size: 1rem;
-      opacity: 0.8;
-      color: #b0b0b0;
+    .error-message {
+      padding: 20px;
+      background-color: #2a2a2a;
+      border-radius: 8px;
+      margin-top: 20px;
+      display: none;
     }
     
-    .destination {
-      background: rgba(40, 40, 40, 0.8);
-      padding: 0.5rem 1rem;
-      border-radius: 4px;
-      word-break: break-all;
-      font-size: 0.85rem;
-      margin-top: 1.5rem;
-      color: #a0a0a0;
-      max-width: 100%;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-    
-    .progress-bar {
-      width: 100%;
-      height: 4px;
-      background-color: #333;
-      border-radius: 2px;
-      overflow: hidden;
-      margin: 1.5rem 0;
-      position: relative;
-    }
-    
-    .progress-bar::after {
-      content: '';
+    .particles {
       position: absolute;
       top: 0;
-      left: -50%;
+      left: 0;
+      width: 100%;
       height: 100%;
-      width: 50%;
-      background: linear-gradient(90deg, transparent, #0078d7, transparent);
-      animation: loading 1.5s infinite;
+      z-index: -1;
     }
     
-    @keyframes loading {
-      0% {
-        left: -50%;
-      }
-      100% {
-        left: 100%;
-      }
-    }
-    
-    .error-container {
-      display: none;
-      text-align: center;
-    }
-    
-    .error-icon {
-      font-size: 2.5rem;
-      margin-bottom: 1rem;
-      color: #ff4545;
-    }
-    
-    .manual-link {
-      display: inline-block;
-      margin-top: 1.5rem;
-      padding: 0.7rem 1.3rem;
-      background-color: #333;
-      border-radius: 4px;
-      color: #e0e0e0;
-      text-decoration: none;
-      font-weight: 400;
-      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
-      transition: all 0.2s ease;
-    }
-    
-    .manual-link:hover {
-      background-color: #444;
-    }
-    
-    @keyframes fadeIn {
-      from {
-        opacity: 0;
-        transform: translateY(10px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-    
-    .container {
-      animation: fadeIn 0.3s ease-out;
+    .particle {
+      position: absolute;
+      background-color: rgba(255, 255, 255, 0.05);
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
     }
   </style>
 </head>
 <body>
+  <div class="particles" id="particles"></div>
+  
   <div class="container">
-    <div class="success-container">
-      <h1>Redirection en cours</h1>
-      
-      <!-- Windows-style loader (dots) -->
-      <div class="windows-loader">
+    <h1>Redirection en cours</h1>
+    
+    <div class="loader">
+      <div class="loader-dots">
+        <div class="dot"></div>
+        <div class="dot"></div>
+        <div class="dot"></div>
         <div class="dot"></div>
         <div class="dot"></div>
         <div class="dot"></div>
         <div class="dot"></div>
         <div class="dot"></div>
       </div>
-      
-      <div class="progress-bar"></div>
-      <p>Veuillez patienter pendant la redirection...</p>
-      <div class="destination" id="destination"></div>
     </div>
     
-    <div class="error-container" id="error-container">
-      <div class="error-icon">⚠️</div>
-      <h1>Échec de redirection</h1>
-      <p>Aucun paramètre de redirection trouvé.</p>
-      <a href="javascript:history.back()" class="manual-link">Retour</a>
+    <div class="error-message" id="error-message">
+      <p>Aucun lien de redirection trouvé !</p>
     </div>
   </div>
 
   <script>
+    // Ajouter des particules d'arrière-plan
+    const particlesContainer = document.getElementById('particles');
+    for (let i = 0; i < 50; i++) {
+      const particle = document.createElement('div');
+      particle.classList.add('particle');
+      
+      // Position aléatoire
+      const posX = Math.random() * 100;
+      const posY = Math.random() * 100;
+      
+      // Taille aléatoire
+      const size = Math.random() * 3 + 1;
+      
+      particle.style.left = `${posX}%`;
+      particle.style.top = `${posY}%`;
+      particle.style.width = `${size}px`;
+      particle.style.height = `${size}px`;
+      particle.style.opacity = Math.random() * 0.5;
+      
+      particlesContainer.appendChild(particle);
+    }
+
     // Fonction de redirection
     function redirectToTarget() {
       const params = new URLSearchParams(window.location.search);
       const target = params.get("r");
       
       if (target) {
-        // Afficher l'URL de destination (de manière sécurisée)
-        const destinationElement = document.getElementById('destination');
-        destinationElement.textContent = `Destination: ${target}`;
-        
-        // Redirection immédiate
+        // Créer un lien invisible et simuler un clic
         const a = document.createElement('a');
         a.href = target;
         a.style.display = 'none';
         document.body.appendChild(a);
         a.click();
         
-        // Redirection de secours après un très court délai 
-        // (au cas où le clic simulé ne fonctionnerait pas)
-        setTimeout(() => {
-          window.location.href = target;
-        }, 200);
+        // Redirection directe en cas d'échec du clic
+        window.location.href = target;
       } else {
-        // Afficher l'erreur si aucun paramètre de redirection
-        document.querySelector('.success-container').style.display = 'none';
-        document.getElementById('error-container').style.display = 'block';
+        // Afficher le message d'erreur
+        document.getElementById('error-message').style.display = 'block';
+        document.querySelector('h1').innerText = 'Erreur de redirection';
       }
     }
     
-    // Initialiser la redirection dès que la page est chargée
-    document.addEventListener('DOMContentLoaded', redirectToTarget);
+    // Redirection immédiate sans délai
+    redirectToTarget();
   </script>
 </body>
 </html>
