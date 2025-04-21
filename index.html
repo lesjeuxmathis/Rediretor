@@ -2,30 +2,308 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Redirection en cours...</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #4a2b8b, #2b568b);
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: white;
+      overflow: hidden;
+    }
+    
+    .container {
+      text-align: center;
+      padding: 2rem;
+      border-radius: 12px;
+      background-color: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+      max-width: 90%;
+      width: 500px;
+      position: relative;
+      z-index: 10;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+    
+    h1 {
+      margin-bottom: 1.5rem;
+      font-weight: 600;
+      font-size: 2rem;
+      background: linear-gradient(to right, #ffffff, #b8c6db);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    
+    .loader {
+      display: inline-block;
+      position: relative;
+      width: 80px;
+      height: 80px;
+      margin: 2rem 0;
+    }
+    
+    .loader div {
+      position: absolute;
+      border: 4px solid #fff;
+      border-radius: 50%;
+      opacity: 1;
+      animation: ripple 1.5s cubic-bezier(0, 0.2, 0.8, 1) infinite;
+    }
+    
+    .loader div:nth-child(2) {
+      animation-delay: -0.5s;
+    }
+    
+    @keyframes ripple {
+      0% {
+        top: 36px;
+        left: 36px;
+        width: 0;
+        height: 0;
+        opacity: 1;
+      }
+      100% {
+        top: 0px;
+        left: 0px;
+        width: 72px;
+        height: 72px;
+        opacity: 0;
+      }
+    }
+    
+    .progress-bar {
+      width: 100%;
+      height: 4px;
+      background-color: rgba(255, 255, 255, 0.2);
+      border-radius: 2px;
+      overflow: hidden;
+      margin: 1rem 0;
+      position: relative;
+    }
+    
+    .progress-bar::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      height: 100%;
+      width: 0;
+      background: linear-gradient(90deg, #00d2ff, #3a7bd5);
+      animation: progress 2s linear forwards;
+    }
+    
+    @keyframes progress {
+      0% { width: 0%; }
+      100% { width: 100%; }
+    }
+    
+    p {
+      margin: 1rem 0;
+      font-size: 1.1rem;
+      opacity: 0.9;
+    }
+    
+    .countdown {
+      font-size: 1.5rem;
+      font-weight: bold;
+      margin: 1rem 0;
+    }
+    
+    .destination {
+      background: rgba(255, 255, 255, 0.1);
+      padding: 0.5rem 1rem;
+      border-radius: 4px;
+      word-break: break-all;
+      font-size: 0.9rem;
+      margin-top: 1rem;
+    }
+    
+    .particles {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+    }
+    
+    .particle {
+      position: absolute;
+      background-color: rgba(255, 255, 255, 0.5);
+      border-radius: 50%;
+      animation: float 15s linear infinite;
+    }
+    
+    @keyframes float {
+      0% {
+        transform: translateY(100vh) scale(0);
+        opacity: 0;
+      }
+      10% {
+        opacity: 1;
+      }
+      90% {
+        opacity: 1;
+      }
+      100% {
+        transform: translateY(-100px) scale(1);
+        opacity: 0;
+      }
+    }
+    
+    @media (max-width: 600px) {
+      .container {
+        padding: 1.5rem;
+        width: 90%;
+      }
+      
+      h1 {
+        font-size: 1.6rem;
+      }
+    }
+    
+    .error-container {
+      display: none;
+      text-align: center;
+    }
+    
+    .error-icon {
+      font-size: 3rem;
+      margin-bottom: 1rem;
+      color: #ff6b6b;
+    }
+    
+    .manual-link {
+      display: inline-block;
+      margin-top: 1rem;
+      padding: 0.8rem 1.5rem;
+      background: linear-gradient(45deg, #4a00e0, #8e2de2);
+      border-radius: 30px;
+      color: white;
+      text-decoration: none;
+      font-weight: 500;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+      transition: all 0.3s ease;
+    }
+    
+    .manual-link:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+    }
+    
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    
+    .container {
+      animation: fadeIn 0.5s ease-out;
+    }
+  </style>
 </head>
 <body>
-  <p>Redirection en cours...</p>
+  <div class="particles" id="particles"></div>
+  
+  <div class="container">
+    <div class="success-container">
+      <h1>Redirection en cours</h1>
+      <div class="loader"><div></div><div></div></div>
+      <p>Vous allez être redirigé automatiquement...</p>
+      <div class="progress-bar"></div>
+      <div class="countdown" id="countdown">3</div>
+      <div class="destination" id="destination"></div>
+    </div>
+    
+    <div class="error-container" id="error-container">
+      <div class="error-icon">⚠️</div>
+      <h1>Aucun lien de redirection trouvé</h1>
+      <p>Le paramètre de redirection semble être manquant ou invalide.</p>
+      <a href="javascript:history.back()" class="manual-link">Retour à la page précédente</a>
+    </div>
+  </div>
+
   <script>
-    // Obtenir l'URL de redirection depuis le paramètre "r"
-    const params = new URLSearchParams(window.location.search);
-    const target = params.get("r");
-
-    if (target) {
-      // Crée un lien invisible et simule un clic
-      const a = document.createElement('a');
-      a.href = target;
-      a.style.display = 'none';
-      document.body.appendChild(a);
-      a.click();
-
-      // Optionnel : rediriger après un petit délai au cas où ça ne fonctionne pas
-      setTimeout(() => {
-        window.location.href = target;
-      }, 100);
-    } else {
-      document.body.innerHTML = "<h2>Aucun lien de redirection trouvé !</h2>";
+    // Créer les particules
+    function createParticles() {
+      const particlesContainer = document.getElementById('particles');
+      const particleCount = 50;
+      
+      for (let i = 0; i < particleCount; i++) {
+        const particle = document.createElement('div');
+        const size = Math.random() * 15 + 5;
+        
+        particle.className = 'particle';
+        particle.style.width = `${size}px`;
+        particle.style.height = `${size}px`;
+        particle.style.left = `${Math.random() * 100}%`;
+        particle.style.opacity = Math.random() * 0.5 + 0.1;
+        particle.style.animationDuration = `${Math.random() * 10 + 5}s`;
+        particle.style.animationDelay = `${Math.random() * 5}s`;
+        
+        particlesContainer.appendChild(particle);
+      }
     }
+    
+    // Fonction de redirection
+    function redirectToTarget() {
+      const params = new URLSearchParams(window.location.search);
+      const target = params.get("r");
+      
+      if (target) {
+        // Afficher l'URL de destination (de manière sécurisée)
+        const destinationElement = document.getElementById('destination');
+        destinationElement.textContent = `Destination: ${target}`;
+        
+        // Compte à rebours
+        const countdownElement = document.getElementById('countdown');
+        let count = 3;
+        
+        const countdownInterval = setInterval(() => {
+          count--;
+          countdownElement.textContent = count;
+          
+          if (count <= 0) {
+            clearInterval(countdownInterval);
+            window.location.href = target;
+          }
+        }, 1000);
+        
+        // Créer un lien invisible et simuler un clic après l'animation
+        setTimeout(() => {
+          const a = document.createElement('a');
+          a.href = target;
+          a.style.display = 'none';
+          document.body.appendChild(a);
+          a.click();
+        }, 3000); // 3 secondes pour correspondre au compte à rebours
+      } else {
+        // Afficher l'erreur si aucun paramètre de redirection
+        document.querySelector('.success-container').style.display = 'none';
+        document.getElementById('error-container').style.display = 'block';
+      }
+    }
+    
+    // Initialiser les animations et la redirection
+    document.addEventListener('DOMContentLoaded', () => {
+      createParticles();
+      redirectToTarget();
+    });
   </script>
 </body>
 </html>
