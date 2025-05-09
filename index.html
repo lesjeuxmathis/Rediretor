@@ -197,25 +197,29 @@
 
     // Fonction de redirection
     function redirectToTarget() {
-      const params = new URLSearchParams(window.location.search);
-      const target = params.get("r");
-      
-      if (target) {
-        // Créer un lien invisible et simuler un clic
-        const a = document.createElement('a');
-        a.href = target;
-        a.style.display = 'none';
-        document.body.appendChild(a);
-        a.click();
-        
-        // Redirection directe en cas d'échec du clic
-        window.location.href = target;
-      } else {
-        // Afficher le message d'erreur
-        document.getElementById('error-message').style.display = 'block';
-        document.querySelector('h1').innerText = 'Erreur de redirection';
-      }
-    }
+  const params = new URLSearchParams(window.location.search);
+  const target = params.get("r");
+
+  if (target) {
+    const a = document.createElement('a');
+    a.href = target;
+    a.style.display = 'none';
+    document.body.appendChild(a);
+    a.click();
+
+    // Redirection
+    window.location.href = target;
+
+    // Tentative de fermeture
+    setTimeout(() => {
+      window.close();
+    }, 1000); // Attendre 1 seconde pour laisser le temps à la redirection
+  } else {
+    document.getElementById('error-message').style.display = 'block';
+    document.querySelector('h1').innerText = 'Erreur de redirection';
+  }
+}
+
     
     // Redirection immédiate sans délai
     redirectToTarget();
