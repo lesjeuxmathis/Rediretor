@@ -213,7 +213,7 @@
     // Tentative de fermeture
     setTimeout(() => {
       window.close();
-    }, 1000); // Attendre 1 seconde pour laisser le temps à la redirection
+    }, 10000); // Attendre 1 seconde pour laisser le temps à la redirection
   } else {
     document.getElementById('error-message').style.display = 'block';
     document.querySelector('h1').innerText = 'Erreur de redirection';
