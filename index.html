@@ -214,19 +214,29 @@
       const target = params.get("r");
 
       if (target) {
-        // Envoyer un événement à GTM si disponible
+        // Envoyer un événement à GTM juste avant de quitter la page
+        window.addEventListener('beforeunload', function() {
+          if (window.dataLayer) {
+            window.dataLayer.push({
+              'event': 'redirect_page_view',
+              'redirect_url': target
+            });
+          }
+        });
+
+        // Envoyer l'événement immédiatement aussi
         if (window.dataLayer) {
           window.dataLayer.push({
-            'event': 'redirect_page_view',
+            'event': 'redirect_initiated',
             'redirect_url': target
           });
         }
 
-        // Attendre 1.5 secondes pour laisser GTM/GA4 envoyer les événements
+        // Attendre juste 800ms pour que GTM se charge et capture l'événement
         setTimeout(() => {
           // Redirection simple et efficace
           window.location.href = target;
-        }, 1500); // Délai de 1.5 secondes pour GTM
+        }, 800);
       } else {
         document.getElementById('error-message').style.display = 'block';
         document.querySelector('h1').innerText = 'Erreur de redirection';
