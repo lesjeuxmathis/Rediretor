@@ -214,27 +214,42 @@
       const target = params.get("r");
 
       if (target) {
-        const a = document.createElement('a');
-        a.href = target;
-        a.style.display = 'none';
-        document.body.appendChild(a);
-        a.click();
+        // Envoyer un événement à GTM si disponible
+        if (window.dataLayer) {
+          window.dataLayer.push({
+            'event': 'redirect_page_view',
+            'redirect_url': target
+          });
+        }
 
-        // Redirection
-        window.location.href = target;
-
-        // Tentative de fermeture
+        // Attendre 1.5 secondes pour laisser GTM/GA4 envoyer les événements
         setTimeout(() => {
-          window.close();
-        }, 10000); // Attendre 10 secondes pour laisser le temps à la redirection
+          const a = document.createElement('a');
+          a.href = target;
+          a.style.display = 'none';
+          document.body.appendChild(a);
+          a.click();
+
+          // Redirection
+          window.location.href = target;
+
+          // Tentative de fermeture après la redirection
+          setTimeout(() => {
+            window.close();
+          }, 1000);
+        }, 1500); // Délai de 1.5 secondes pour GTM
       } else {
         document.getElementById('error-message').style.display = 'block';
         document.querySelector('h1').innerText = 'Erreur de redirection';
       }
     }
     
-    // Redirection immédiate sans délai
-    redirectToTarget();
+    // Lancer la redirection après le chargement de la page
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', redirectToTarget);
+    } else {
+      redirectToTarget();
+    }
   </script>
 </body>
 </html>
