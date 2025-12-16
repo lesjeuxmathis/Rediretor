@@ -1,6 +1,14 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
+  <!-- Google Tag Manager -->
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+  new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+  j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+  'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+  })(window,document,'script','dataLayer','GTM-M5J4ZDQQ');</script>
+  <!-- End Google Tag Manager -->
+  
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Redirection en cours...</title>
@@ -149,6 +157,11 @@
   </style>
 </head>
 <body>
+  <!-- Google Tag Manager (noscript) -->
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-M5J4ZDQQ"
+  height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <!-- End Google Tag Manager (noscript) -->
+  
   <div class="particles" id="particles"></div>
   
   <div class="container">
@@ -197,29 +210,28 @@
 
     // Fonction de redirection
     function redirectToTarget() {
-  const params = new URLSearchParams(window.location.search);
-  const target = params.get("r");
+      const params = new URLSearchParams(window.location.search);
+      const target = params.get("r");
 
-  if (target) {
-    const a = document.createElement('a');
-    a.href = target;
-    a.style.display = 'none';
-    document.body.appendChild(a);
-    a.click();
+      if (target) {
+        const a = document.createElement('a');
+        a.href = target;
+        a.style.display = 'none';
+        document.body.appendChild(a);
+        a.click();
 
-    // Redirection
-    window.location.href = target;
+        // Redirection
+        window.location.href = target;
 
-    // Tentative de fermeture
-    setTimeout(() => {
-      window.close();
-    }, 10000); // Attendre 1 seconde pour laisser le temps à la redirection
-  } else {
-    document.getElementById('error-message').style.display = 'block';
-    document.querySelector('h1').innerText = 'Erreur de redirection';
-  }
-}
-
+        // Tentative de fermeture
+        setTimeout(() => {
+          window.close();
+        }, 10000); // Attendre 10 secondes pour laisser le temps à la redirection
+      } else {
+        document.getElementById('error-message').style.display = 'block';
+        document.querySelector('h1').innerText = 'Erreur de redirection';
+      }
+    }
     
     // Redirection immédiate sans délai
     redirectToTarget();
