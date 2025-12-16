@@ -254,9 +254,13 @@
             clearInterval(countdownInterval);
             countdownElement.textContent = 'Redirection...';
             
-            // Rediriger après le compte à rebours
+            // Ouvrir dans un nouvel onglet pour éviter les timeouts
             setTimeout(() => {
-              window.location.href = target;
+              window.open(target, '_blank');
+              // Optionnel : fermer l'onglet actuel après l'ouverture
+              setTimeout(() => {
+                window.close();
+              }, 500);
             }, 500);
           }
         }, 1000); // Mise à jour chaque seconde
