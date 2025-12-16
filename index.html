@@ -38,21 +38,258 @@
       color: #e0e0e0;
     }
     
-    .countdown {
-      font-size: 48px;
-      font-weight: 700;
-      color: #4CAF50;
-      margin-top: 30px;
-      animation: pulse-number 1s ease-in-out infinite;
+    .loader {
+      position: relative;
+      width: 80px;
+      height: 80px;
+      margin: 0 auto;
     }
     
-    @keyframes pulse-number {
+    .loader-dots {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      animation: spin 3s linear infinite;
+    }
+    
+    .dot {
+      position: absolute;
+      width: 12px;
+      height: 12px;
+      background-color: #f0f0f0;
+      border-radius: 50%;
+      transform: scale(0);
+      animation: pulse 1.5s ease-in-out infinite;
+    }
+    
+    .dot:nth-child(1) {
+      top: 0;
+      left: calc(50% - 6px);
+      animation-delay: 0s;
+    }
+    
+    .dot:nth-child(2) {
+      top: 12px;
+      right: 12px;
+      animation-delay: 0.2s;
+    }
+    
+    .dot:nth-child(3) {
+      right: 0;
+      top: calc(50% - 6px);
+      animation-delay: 0.4s;
+    }
+    
+    .dot:nth-child(4) {
+      bottom: 12px;
+      right: 12px;
+      animation-delay: 0.6s;
+    }
+    
+    .dot:nth-child(5) {
+      bottom: 0;
+      left: calc(50% - 6px);
+      animation-delay: 0.8s;
+    }
+    
+    .dot:nth-child(6) {
+      bottom: 12px;
+      left: 12px;
+      animation-delay: 1.0s;
+    }
+    
+    .dot:nth-child(7) {
+      left: 0;
+      top: calc(50% - 6px);
+      animation-delay: 1.2s;
+    }
+    
+    .dot:nth-child(8) {
+      top: 12px;
+      left: 12px;
+      animation-delay: 1.4s;
+    }
+    
+    @keyframes pulse {
       0%, 100% {
-        transform: scale(1);
+        transform: scale(0);
+        opacity: 0.7;
       }
       50% {
-        transform: scale(1.1);
+        transform: scale(1);
+        opacity: 1;
       }
+    }
+    
+    @keyframes spin {
+      0% {
+        transform: rotate(0deg);
+      }
+      100% {
+        transform: rotate(360deg);
+      }
+    }
+    
+    .error-message {
+      padding: 20px;
+      background-color: #2a2a2a;
+      border-radius: 8px;
+      margin-top: 20px;
+      display: none;
+    }
+    
+    .particles {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+    }
+    
+    .particle {
+      position: absolute;
+      background-color: rgba(255, 255, 255, 0.05);
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+    }
+  </style>
+</head>
+<body>
+  <!-- Google Tag Manager (noscript) -->
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-M5J4ZDQQ"
+  height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <!-- End Google Tag Manager (noscript) -->
+  
+  <div class="particles" id="particles"></div>
+  
+  <div class="container">
+    <h1>Redirection en cours</h1>
+    
+    <div class="loader">
+      <div class="loader-dots">
+        <div class="dot"></div>
+        <div class="dot"></div>
+        <div class="dot"></div>
+        <div class="dot"></div>
+        <div class="dot"></div>
+        <div class="dot"></div>
+        <div class="dot"></div>
+        <div class="dot"></div>
+      </div>
+    </div>
+    
+    <div class="error-message" id="error-message">
+      <p>Aucun lien de redirection trouvé !</p>
+    </div>
+  </div>
+
+  <script>
+    // Ajouter des particules d'arrière-plan
+    const particlesContainer = document.getElementById('particles');
+    for (let i = 0; i < 50; i++) {
+      const particle = document.createElement('div');
+      particle.classList.add('particle');
+      
+      // Position aléatoire
+      const posX = Math.random() * 100;
+      const posY = Math.random() * 100;
+      
+      // Taille aléatoire
+      const size = Math.random() * 3 + 1;
+      
+      particle.style.left = `${posX}%`;
+      particle.style.top = `${posY}%`;
+      particle.style.width = `${size}px`;
+      particle.style.height = `${size}px`;
+      particle.style.opacity = Math.random() * 0.5;
+      
+      particlesContainer.appendChild(particle);
+    }
+
+    // Fonction de redirection
+    function redirectToTarget() {
+      const params = new URLSearchParams(window.location.search);
+      const target = params.get("r");
+
+      if (target) {
+        // Envoyer un événement à GTM si disponible
+        if (window.dataLayer) {
+          window.dataLayer.push({
+            'event': 'redirect_page_view',
+            'redirect_url': target
+          });
+        }
+
+        // Attendre 1.5 secondes pour laisser GTM/GA4 envoyer les événements
+        setTimeout(() => {
+          const a = document.createElement('a');
+          a.href = target;
+          a.style.display = 'none';
+          document.body.appendChild(a);
+          a.click();
+
+          // Redirection
+          window.location.href = target;
+
+          // Tentative de fermeture après la redirection
+          setTimeout(() => {
+            window.close();
+          }, 1000);
+        }, 1500); // Délai de 1.5 secondes pour GTM
+      } else {
+        document.getElementById('error-message').style.display = 'block';
+        document.querySelector('h1').innerText = 'Erreur de redirection';
+      }
+    }
+    
+    // Lancer la redirection après le chargement de la page
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', redirectToTarget);
+    } else {
+      redirectToTarget();
+    }
+  </script>
+</body>
+</html><!DOCTYPE html>
+<html lang="fr">
+<head>
+  <!-- Google Tag Manager -->
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+  new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+  j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+  'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+  })(window,document,'script','dataLayer','GTM-M5J4ZDQQ');</script>
+  <!-- End Google Tag Manager -->
+  
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Redirection en cours...</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', Arial, sans-serif;
+      background-color: #1a1a1a;
+      color: #f0f0f0;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      overflow: hidden;
+    }
+    
+    .container {
+      text-align: center;
+    }
+    
+    h1 {
+      font-size: 24px;
+      font-weight: 400;
+      margin-bottom: 40px;
+      color: #e0e0e0;
     }
     
     .loader {
@@ -197,8 +434,6 @@
       </div>
     </div>
     
-    <div class="countdown" id="countdown">5</div>
-    
     <div class="error-message" id="error-message">
       <p>Aucun lien de redirection trouvé !</p>
     </div>
@@ -227,53 +462,48 @@
       particlesContainer.appendChild(particle);
     }
 
-    // Fonction de redirection avec compte à rebours
+    // Fonction de redirection
     function redirectToTarget() {
       const params = new URLSearchParams(window.location.search);
       const target = params.get("r");
 
       if (target) {
-        // Envoyer l'événement GTM IMMÉDIATEMENT au chargement de la page
+        // Envoyer un événement à GTM si disponible
         if (window.dataLayer) {
           window.dataLayer.push({
             'event': 'redirect_page_view',
             'redirect_url': target
           });
-          console.log('GTM event sent:', target);
         }
 
-        // Compte à rebours de 5 secondes
-        let countdown = 5;
-        const countdownElement = document.getElementById('countdown');
-        
-        const countdownInterval = setInterval(() => {
-          countdown--;
-          countdownElement.textContent = countdown;
-          
-          if (countdown <= 0) {
-            clearInterval(countdownInterval);
-            countdownElement.textContent = 'Redirection...';
-            
-            // Ouvrir dans un nouvel onglet pour éviter les timeouts
-            setTimeout(() => {
-              window.open(target, '_blank');
-              // Optionnel : fermer l'onglet actuel après l'ouverture
-              setTimeout(() => {
-                window.close();
-              }, 500);
-            }, 500);
-          }
-        }, 1000); // Mise à jour chaque seconde
-        
+        // Attendre 1.5 secondes pour laisser GTM/GA4 envoyer les événements
+        setTimeout(() => {
+          const a = document.createElement('a');
+          a.href = target;
+          a.style.display = 'none';
+          document.body.appendChild(a);
+          a.click();
+
+          // Redirection
+          window.location.href = target;
+
+          // Tentative de fermeture après la redirection
+          setTimeout(() => {
+            window.close();
+          }, 1000);
+        }, 1500); // Délai de 1.5 secondes pour GTM
       } else {
         document.getElementById('error-message').style.display = 'block';
-        document.getElementById('countdown').style.display = 'none';
         document.querySelector('h1').innerText = 'Erreur de redirection';
       }
     }
     
-    // Lancer immédiatement
-    redirectToTarget();
+    // Lancer la redirection après le chargement de la page
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', redirectToTarget);
+    } else {
+      redirectToTarget();
+    }
   </script>
 </body>
 </html>
